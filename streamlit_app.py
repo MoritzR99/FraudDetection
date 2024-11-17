@@ -30,30 +30,16 @@ except Exception as e:
 
 # Functions
 # Function to load graphs from .pkl files
-def load_graph(file_name):
-    """
-    Load a graph from a pickle file and display it in a Streamlit app.
-    
-    Parameters:
-    file_name (str): The name of the file containing the pickled figure.
-    
-    Returns:
-    fig (matplotlib.figure.Figure or None): The loaded figure or None if an error occurs.
-    """
-    try:
-        with open(file_name, "rb") as file:
-            fig = pickle.load(file)
-            if isinstance(fig, plt.Figure):
-                st.pyplot(fig)  # Display the figure in Streamlit
-            else:
-                st.error(f"The file does not contain a valid Matplotlib figure: {file_name}")
-                return None
-            return fig
-    except FileNotFoundError:
-        st.error(f"Graph not found: {file_name}")
-    except Exception as e:
-        st.error(f"An error occurred while loading {file_name}: {e}")
-    return None
+    def load_graph(file_name):
+        """Helper function to load and display graphs from .pkl files."""
+        try:
+            with open(file_name, "rb") as file:
+                fig = pickle.load(file)
+            st.pyplot(fig)
+        except FileNotFoundError as e:
+            st.error(f"Graph not found: {file_name}")
+        except Exception as e:
+            st.error(f"An error occurred while loading {file_name}: {e}")
 
 def load_numpy(file_name):
     try:
@@ -204,17 +190,6 @@ elif page_selection == "Model Training and Evaluation":
             "Classification Reports",
         ]
     )
-
-    def load_graph(file_name):
-        """Helper function to load and display graphs from .pkl files."""
-        try:
-            with open(file_name, "rb") as file:
-                fig = pickle.load(file)
-            st.pyplot(fig)
-        except FileNotFoundError as e:
-            st.error(f"Graph not found: {file_name}")
-        except Exception as e:
-            st.error(f"An error occurred while loading {file_name}: {e}")
 
     if evaluation_selection == "Loss Curve":
         st.write("### Loss Curve")
