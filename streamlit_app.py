@@ -264,7 +264,7 @@ elif page_selection == "Model Training and Evaluation":
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
-    st.write("Interactive fraud detection form...")
+    st.write("Interactive fraud detection form to predict transaction fraud.")
 
     # Load the model
     with open("model.pkl", "rb") as f:
@@ -274,20 +274,22 @@ elif page_selection == "Fraud Detection Simulator":
     st.write("### Input Transaction Details")
     time = st.number_input("Transaction Time (seconds since first transaction)", value=0, min_value=0)
     amount = st.number_input("Transaction Amount", value=0.0, min_value=0.0, step=0.01)
+
+    # Input PCA-transformed V features
+    st.write("### Input PCA-Transformed Features (V1 to V28)")
     v_features = [
         st.number_input(f"V{i}", value=0.0, step=0.01) for i in range(1, 29)
     ]
 
     # Prepare input for the model
-    input_data = [time, amount] + v_features
+    input_data = np.array([[time, amount] + v_features])
 
     # Predict fraud
     if st.button("Detect Fraud"):
-        prediction = fraud_detection_model.predict([input_data])
-        fraud_probability = fraud_detection_model.predict_proba([input_data])[0][1]
-        
+        prediction = fraud_detection_model.predict(input_data)
+        fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
+
         if prediction[0] == 1:
             st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
         else:
             st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
-
