@@ -43,8 +43,7 @@ page_selection = st.radio("", [
 if page_selection == "Introduction":
     st.balloons()  # Display balloons
     st.subheader("Welcome to the Credit Card Fraud Detection App")
-    st.write("The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. 
-    It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, providing real-time predictions based on transaction data.")
+    st.write("The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, providing real-time predictions based on transaction data.")
 
 # Page selection for "Data Overview"
 elif page_selection == "Data Overview":
