@@ -263,8 +263,8 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Classification Reports")
         
         # Load the DataFrames
-        classification_train = pd.read_pickle("classification_report_train.pk")
-        classification_test = pd.read_pickle("classification_report_test.pk")
+        classification_train = pd.read_pickle("classification_report_train.pkl")
+        classification_test = pd.read_pickle("classification_report_test.pkl")
     
         # Create two columns for side-by-side display
         col1, col2 = st.columns(2)
