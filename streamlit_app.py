@@ -215,7 +215,7 @@ elif page_selection == "Model Training and Evaluation":
         recall = recalls[closest_idx]
 
         st.write(f"**Cutoff Threshold**: {cutoff_value:.2f}")
-        st.write(f"**Treshhold to be considered fraudulent**: 1-{cutoff_value:.2f}"
+        st.write(f"**Treshhold to be considered fraudulent**: 1-{cutoff_value:.2f}")
         st.write(f"**Precision**: {precision:.2f}")
         st.write(f"**Recall**: {recall:.2f}")
 
