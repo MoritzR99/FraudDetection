@@ -46,10 +46,28 @@ if page_selection == "Introduction":
     st.write("The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. 
     It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, providing real-time predictions based on transaction data.")
 
+# Page selection for "Data Overview"
 elif page_selection == "Data Overview":
     st.balloons()  # Display balloons
     st.subheader("Data Overview")
-    st.write("Here is a summary of the dataset...")
+    st.write("Here is a summary of the dataset:")
+
+    # Load the tables
+    try:
+        head_table = pd.read_pickle("head_table.pkl")  # Adjust path if necessary
+        describe_table = pd.read_pickle("describe_table.pkl")
+
+        # Display the tables
+        st.write("### First Few Rows of the Dataset:")
+        st.dataframe(head_table)  # Display head table
+
+        st.write("### Dataset Description:")
+        st.dataframe(describe_table)  # Display describe table
+
+    except FileNotFoundError as e:
+        st.error(f"Error loading tables: {e}")
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {e}")
 
 elif page_selection == "Exploratory Data Analysis":
     st.balloons()  # Display balloons
