@@ -223,7 +223,8 @@ elif page_selection == "Model Training and Evaluation":
         
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports and Confusion Matrices")
-        st.dataframe("classification_report.pkl")
+        load_graph("confusion_matrix_test.pkl")
+        load_graph("confusion_matrix_train.pkl")
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
