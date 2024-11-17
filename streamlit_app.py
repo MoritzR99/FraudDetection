@@ -73,7 +73,18 @@ elif page_selection == "Data Overview":
 elif page_selection == "Exploratory Data Analysis":
     st.balloons()  # Display balloons
     st.subheader("Exploratory Data Analysis")
-    st.write("Data visualizations go here...")
+    st.write("Select a visualization from the dropdown menu below:")
+
+    # Dropdown menu for graph selection
+    graph_selection = st.selectbox(
+        "Choose a visualization:",
+        [
+            "Amount Over Time (Non-Fraud and Fraud)",
+            "Count Over Time (Non-Fraud and Fraud)",
+            "Fraudulent Ratio Over Time",
+            "Average Amount by Class",
+        ]
+    )
 
     def load_graph(file_name):
         """Helper function to load and display graphs from .pkl files."""
@@ -86,30 +97,26 @@ elif page_selection == "Exploratory Data Analysis":
         except Exception as e:
             st.error(f"An error occurred while loading {file_name}: {e}")
 
-    # Display amount and count graphs side by side
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.write("### Non-Fraud Amount")
+    # Display selected graph based on dropdown choice
+    if graph_selection == "Amount Over Time (Non-Fraud and Fraud)":
+        st.write("### Non-Fraud Amount Over Time")
         load_graph("non_fraud_amount.pkl")
-
-        st.write("### Non-Fraud Count")
-        load_graph("non_fraud_count.pkl")
-
-    with col2:
-        st.write("### Fraud Amount")
+        st.write("### Fraud Amount Over Time")
         load_graph("fraud_amount.pkl")
 
-        st.write("### Fraud Count")
+    elif graph_selection == "Count Over Time (Non-Fraud and Fraud)":
+        st.write("### Non-Fraud Count Over Time")
+        load_graph("non_fraud_count.pkl")
+        st.write("### Fraud Count Over Time")
         load_graph("fraud_count.pkl")
 
-    # Display remaining graphs
-    st.write("### Fraud Ratio")
-    load_graph("fraud_ratio.pkl")
+    elif graph_selection == "Fraudulent Ratio Over Time":
+        st.write("### Fraudulent Ratio Over Time")
+        load_graph("fraud_ratio.pkl")
 
-    st.write("### Average Amount by Class")
-    load_graph("average_amount_by_class.pkl")
-
+    elif graph_selection == "Average Amount by Class":
+        st.write("### Average Transaction Amount by Class")
+        load_graph("average_amount_by_class.pkl")
 elif page_selection == "Feature Engineering":
     st.balloons()  # Display balloons
     st.subheader("Feature Engineering")
