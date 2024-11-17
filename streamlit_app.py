@@ -253,9 +253,12 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Training Set Classification Report")
         try:
             # Load and display the training classification report
-            with open("classification_report_train.pkl", "rb") as file:
+            with open("/mnt/data/classification_report_train.pkl", "rb") as file:
                 train_report = pickle.load(file)
-            st.text(train_report)
+            
+            # Convert the dictionary to a DataFrame
+            train_df = pd.DataFrame(train_report).transpose()
+            st.dataframe(train_df)
         except FileNotFoundError:
             st.error("Training classification report file not found.")
         except Exception as e:
@@ -266,14 +269,16 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Test Set Classification Report")
         try:
             # Load and display the test classification report
-            with open("classification_report_test.pkl", "rb") as file:
+            with open("/mnt/data/classification_report_test.pkl", "rb") as file:
                 test_report = pickle.load(file)
-            st.text(test_report)
+            
+            # Convert the dictionary to a DataFrame
+            test_df = pd.DataFrame(test_report).transpose()
+            st.dataframe(test_df)
         except FileNotFoundError:
             st.error("Test classification report file not found.")
         except Exception as e:
-            st.error(f"An error occurred while loading the test classification report: {e}")
-    
+            st.error(f"An error occurred while loading the test classification report: {e}") 
 
 
 elif page_selection == "Fraud Detection Simulator":
