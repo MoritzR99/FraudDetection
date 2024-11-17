@@ -225,50 +225,6 @@ elif page_selection == "Model Training and Evaluation":
         # Display cutoff graph
         load_graph("cutoff.pkl")
 
-    elif evaluation_selection == "Classification Reports and Confusion Matrices":
-    st.write("### Classification Reports")
-    try:
-        # Load and display classification reports as text
-        with open("classification_report_train.pkl", "rb") as file:
-            classification_report_train = pickle.load(file)
-        with open("classification_report_test.pkl", "rb") as file:
-            classification_report_test = pickle.load(file)
-
-        st.write("#### Training Set Classification Report")
-        st.text(classification_report_train)
-
-        st.write("#### Test Set Classification Report")
-        st.text(classification_report_test)
-
-        # Load confusion matrices
-        with open("confusion_matrix_train.pkl", "rb") as file:
-            confusion_matrix_train = pickle.load(file)
-        with open("confusion_matrix_test.pkl", "rb") as file:
-            confusion_matrix_test = pickle.load(file)
-
-        # Visualize confusion matrices as heatmaps
-        st.write("### Confusion Matrices")
-
-        st.write("#### Training Set")
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.heatmap(confusion_matrix_train, annot=True, fmt="d", cmap="Blues", ax=ax)
-        ax.set_title("Confusion Matrix - Training Set")
-        ax.set_xlabel("Predicted")
-        ax.set_ylabel("Actual")
-        st.pyplot(fig)
-
-        st.write("#### Test Set")
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.heatmap(confusion_matrix_test, annot=True, fmt="d", cmap="Blues", ax=ax)
-        ax.set_title("Confusion Matrix - Test Set")
-        ax.set_xlabel("Predicted")
-        ax.set_ylabel("Actual")
-        st.pyplot(fig)
-
-    except FileNotFoundError as e:
-        st.error(f"File not found: {e}")
-    except Exception as e:
-        st.exception(e)
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
