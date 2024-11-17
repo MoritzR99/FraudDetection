@@ -30,6 +30,16 @@ except Exception as e:
     cutoff_data = None
 
 # Functions
+def preprocess_input(df):
+                """Preprocess input CSV to match the model's expected format."""
+                # Ensure only numerical columns are kept
+                numerical_columns = [col for col in df.columns if col.startswith('V') or col in ['Time', 'Amount']]
+                return df[numerical_columns]
+            
+def predict_fraud(data):
+    """Predict fraud using the loaded model."""
+    predictions = fraud_detection_model.predict(data)
+    return predictions
 # Function to load graphs from .pkl files
 def load_graph(file_name):
         """Helper function to load and display graphs from .pkl files."""
@@ -341,18 +351,7 @@ elif page_selection == "Fraud Detection Simulator":
 
             # Load the model
             fraud_detection_model = load_model("model.h5")
-            
-            def preprocess_input(df):
-                """Preprocess input CSV to match the model's expected format."""
-                # Ensure only numerical columns are kept
-                numerical_columns = [col for col in df.columns if col.startswith('V') or col in ['Time', 'Amount']]
-                return df[numerical_columns]
-            
-            def predict_fraud(data):
-                """Predict fraud using the loaded model."""
-                predictions = fraud_detection_model.predict(data)
-                return predictions
-            
+                        
             # Fraud Detection Simulator Page
                 st.subheader("Fraud Detection Simulator")
                 st.write("Upload a CSV file with transaction data for fraud detection.")
