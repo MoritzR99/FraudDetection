@@ -335,5 +335,7 @@ elif page_selection == "Fraud Detection Simulator":
         st.write("Adjust the features in the sidebar and click 'Detect Fraud' to see the results.")
         st.write("Feel free to share the public link with others!")
 
-
+    if input_mode == "Upload CSV":
+            st.subheader("Upload CSV")
+            st.write("Upload your CSV and get your predictions!")
 
