@@ -55,6 +55,23 @@ def load_graph(file_name):
         st.error(f"An error occurred while loading {file_name}: {e}")
     return None
 
+def load_numpy(file_name):
+    try:
+        with open(file_name, "rb") as file:
+            data = pickle.load(file)
+            if isinstance(data, (list, tuple, dict)) or hasattr(data, "shape"):
+                fig, ax = plt.subplots()
+                sns.heatmap(data, annot=True, fmt="d", cmap="Blues", ax=ax)
+                st.pyplot(fig)
+                return data
+            else:
+                st.error(f"Unexpected data type: {type(data)}")
+    except FileNotFoundError:
+        st.error(f"Graph not found: {file_name}")
+    except Exception as e:
+        st.error(f"An error occurred while loading {file_name}: {e}")
+    return None
+
 # Streamlit App Configuration
 st.set_page_config(
     page_title='Credit Card Fraud Detection',
@@ -237,8 +254,8 @@ elif page_selection == "Model Training and Evaluation":
         
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports and Confusion Matrices")
-        load_graph("confusion_matrix_test.pkl")
-        load_graph("confusion_matrix_train.pkl")
+        load_numpy("confusion_matrix_test.pkl")
+        load_numpy("confusion_matrix_train.pkl")
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
