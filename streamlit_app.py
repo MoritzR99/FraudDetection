@@ -33,7 +33,8 @@ page_selection = st.radio("", [
     "Data Overview",
     "Exploratory Data Analysis",
     "Feature Engineering",
-    "Model Training and Evaluation",
+    "Model Training",
+    "Evaluation",
     "Fraud Detection Simulator",
     "Download Report",
     "Feedback"
@@ -114,9 +115,14 @@ elif page_selection == "Exploratory Data Analysis":
 elif page_selection == "Feature Engineering":
     st.balloons()  # Display balloons
     st.subheader("Feature Engineering")
-    st.write("Feature transformations and importance analysis...")
+    st.write("No additional features were added, as most of them are already PCA transformed. The only transformation used, was the Standart Scaler to normalize features for the ANN model.")
 
-elif page_selection == "Model Training and Evaluation":
+elif page_selection == "Model Training":
+    st.balloons()  # Display balloons
+    st.subheader("Model Training and Evaluation")
+    st.write("Model performance metrics...")
+
+elif page_selection == "Evaluation":
     st.balloons()  # Display balloons
     st.subheader("Model Training and Evaluation")
     st.write("Model performance metrics...")
