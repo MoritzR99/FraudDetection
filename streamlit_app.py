@@ -229,8 +229,8 @@ elif page_selection == "Model Training and Evaluation":
         load_graph("cutoff.pkl")
         
     elif evaluation_selection == "Confusion Matrices":
-        st.write("### Confusion Matrices")
-        # Create two columns for side-by-side display
+    st.write("### Confusion Matrices")
+    # Create two columns for side-by-side display
     col1, col2 = st.columns(2)
     
     # Left column: Train Confusion Matrix
@@ -243,8 +243,8 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Test Set Confusion Matrix")
         load_numpy("confusion_matrix_test.pkl")
 
-    elif evaluation_selection == "Classification Reports":
-        st.write("#### Classification Reports")
+elif evaluation_selection == "Classification Reports":
+    st.write("#### Classification Reports")
     
 
 
