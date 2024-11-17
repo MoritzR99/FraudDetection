@@ -246,12 +246,12 @@ elif page_selection == "Model Training and Evaluation":
     elif evaluation_selection == "Classification Reports":
         st.write("#### Classification Reports")
         # Load the DataFrame
-classification_train = pd.read_pickle("classification_report_train.pk")
-classification_test = pd.read_pickle("classification_report_test.pk")
+        classification_train = pd.read_pickle("classification_report_train.pk")
+        classification_test = pd.read_pickle("classification_report_test.pk")
 
-# Display in Streamlit
-st.dataframe(classification_train)
-st.dataframe(classification_test)
+        # Display in Streamlit
+        st.dataframe(classification_train)
+        st.dataframe(classification_test)
     
 
 
