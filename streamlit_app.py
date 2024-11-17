@@ -254,8 +254,18 @@ elif page_selection == "Model Training and Evaluation":
         
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports and Confusion Matrices")
-        load_numpy("confusion_matrix_test.pkl")
+        # Create two columns for side-by-side display
+    col1, col2 = st.columns(2)
+    
+    # Left column: Train Confusion Matrix
+    with col1:
+        st.write("#### Training Set Confusion Matrix")
         load_numpy("confusion_matrix_train.pkl")
+    
+    # Right column: Test Confusion Matrix
+    with col2:
+        st.write("#### Test Set Confusion Matrix")
+        load_numpy("confusion_matrix_test.pkl")
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
