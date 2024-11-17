@@ -267,8 +267,12 @@ elif page_selection == "Fraud Detection Simulator":
     st.write("Interactive fraud detection form to predict transaction fraud.")
 
     # Load the model
-    with open("model.pkl", "rb") as f:
-        fraud_detection_model = pickle.load(f)
+    try:
+        with open("model.pkl", "rb") as f:
+            fraud_detection_model = pickle.load(f)
+    except FileNotFoundError:
+        st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
+        st.stop()
 
     # Input fields for user simulation
     st.write("### Input Transaction Details")
@@ -286,10 +290,13 @@ elif page_selection == "Fraud Detection Simulator":
 
     # Predict fraud
     if st.button("Detect Fraud"):
-        prediction = fraud_detection_model.predict(input_data)
-        fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
+        try:
+            prediction = fraud_detection_model.predict(input_data)
+            fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
 
-        if prediction[0] == 1:
-            st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
-        else:
-            st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
+            if prediction[0] == 1:
+                st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
+            else:
+                st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {str(e)}")
