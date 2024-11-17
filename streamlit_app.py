@@ -98,11 +98,11 @@ elif page_selection == "Exploratory Data Analysis":
         load_graph("non_fraud_count.pkl")
 
     with col2:
-        st.write("### Fraud Count")
-        load_graph("fraud_count.pkl")
-
         st.write("### Fraud Amount")
         load_graph("fraud_amount.pkl")
+
+        st.write("### Fraud Count")
+        load_graph("fraud_count.pkl")
 
     # Display remaining graphs
     st.write("### Fraud Ratio")
