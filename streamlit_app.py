@@ -17,6 +17,19 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 
+# Functions
+# Function to load graphs from .pkl files
+def load_graph(file_name):
+    try:
+        with open(file_name, "rb") as file:
+            fig = pickle.load(file)
+        return fig
+    except FileNotFoundError:
+        st.error(f"Graph not found: {file_name}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return None
+
 # Streamlit App Configuration
 st.set_page_config(
     page_title='Credit Card Fraud Detection',
@@ -132,15 +145,88 @@ elif page_selection == "Exploratory Data Analysis":
     elif graph_selection == "Average Amount by Class":
         st.write("### Average Transaction Amount by Class")
         load_graph("average_amount_by_class.pkl")
+        
 elif page_selection == "Feature Engineering":
     st.balloons()  # Display balloons
     st.subheader("Feature Engineering")
     st.write("No additional features were added, as most of them are already PCA transformed. The only transformation used, was the Standart Scaler to normalize features for the ANN model.")
 
+# Model Training and Evaluation Section
 elif page_selection == "Model Training and Evaluation":
-    st.balloons()  # Display balloons
+    st.balloons()
     st.subheader("Model Training and Evaluation")
     st.write("Model performance metrics...")
+
+    # Dropdown for graph selection
+    graph_selection = st.selectbox(
+        "Choose a visualization or metrics to display:",
+        [
+            "Loss Curve",
+            "Cutoff Analysis",
+            "Classification Reports & Confusion Matrices",
+        ]
+    )
+
+    if graph_selection == "Loss Curve":
+        st.write("### Loss Curve")
+        fig = load_graph("loss_curve.pkl")
+        if fig:
+            st.pyplot(fig)
+
+    elif graph_selection == "Cutoff Analysis":
+        st.write("### Cutoff Analysis")
+
+        # Load cutoff analysis graph
+        fig = load_graph("cutoff.pkl")
+        if fig:
+            st.pyplot(fig)
+
+        # Add a slider to adjust the cutoff threshold
+        cutoff_threshold = st.slider(
+            "Select the cutoff threshold:", min_value=0.0, max_value=1.0, value=0.5, step=0.01
+        )
+
+        # Calculate and display precision and recall dynamically
+        try:
+            # Assuming you have access to the predicted probabilities and true labels
+            y_pred_probs = ...  # Replace with your model's predicted probabilities
+            y_true = ...  # Replace with your true labels
+
+            y_pred = (y_pred_probs > cutoff_threshold).astype(int)
+            precision = precision_score(y_true, y_pred)
+            recall = recall_score(y_true, y_pred)
+
+            st.write(f"**Precision Score:** {precision:.2f}")
+            st.write(f"**Recall Score:** {recall:.2f}")
+        except Exception as e:
+            st.warning("Could not calculate precision and recall. Ensure y_pred_probs and y_true are available.")
+
+    elif graph_selection == "Classification Reports & Confusion Matrices":
+        st.write("### Classification Reports & Confusion Matrices")
+
+        # Load and display Classification Report for Training
+        st.write("#### Training Classification Report")
+        train_report_fig = load_graph("classification_report_train.pkl")
+        if train_report_fig:
+            st.pyplot(train_report_fig)
+
+        # Load and display Confusion Matrix for Training
+        st.write("#### Training Confusion Matrix")
+        train_cm_fig = load_graph("confusion_matrix_train.pkl")
+        if train_cm_fig:
+            st.pyplot(train_cm_fig)
+
+        # Load and display Classification Report for Testing
+        st.write("#### Testing Classification Report")
+        test_report_fig = load_graph("classification_report_test.pkl")
+        if test_report_fig:
+            st.pyplot(test_report_fig)
+
+        # Load and display Confusion Matrix for Testing
+        st.write("#### Testing Confusion Matrix")
+        test_cm_fig = load_graph("confusion_matrix_test.pkl")
+        if test_cm_fig:
+            st.pyplot(test_cm_fig)
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
