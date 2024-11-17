@@ -226,7 +226,7 @@ elif page_selection == "Model Training and Evaluation":
         load_graph("cutoff.pkl")
 
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
-    st.write("### Classification Reports and Confusion Matrices")
+        st.write("### Classification Reports and Confusion Matrices")
 
     try:
         # Load confusion matrices
