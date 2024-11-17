@@ -49,7 +49,7 @@ if page_selection == "Introduction":
 elif page_selection == "Data Overview":
     st.balloons()  # Display balloons
     st.subheader("Data Overview")
-    st.write("Here is a summary of the dataset:")
+    st.write("Since most columns of the used dataset were PCA transformed, an extensive data overview is not meaningful here. Nevertheless, two tables will be shown below to give an general idea about the nature of the underlying dataset:")
 
     # Load the tables
     try:
@@ -58,9 +58,11 @@ elif page_selection == "Data Overview":
 
         # Display the tables
         st.write("### First Few Rows of the Dataset:")
+        st.write("Here it can be seen, that the dataset consits out of 31 columns while class will be used as target, all others can be seen as possible features. Furthermore, all columns got PCA transformed, excluding time, amount and class.")
         st.dataframe(head_table)  # Display head table
 
         st.write("### Dataset Description:")
+        st.write("Here, two of the non transformed columns get describes. This shows, that our target is binary, whereas 1 describes fraudulent transactions, while 0 describes non-fraudulent tansactions. Furthermore, the dataset is strongly biased towards non fraudulant transactions as it can be seen in the precentiles.
         st.dataframe(describe_table)  # Display describe table
 
     except FileNotFoundError as e:
