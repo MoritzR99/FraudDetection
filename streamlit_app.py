@@ -245,6 +245,34 @@ elif page_selection == "Model Training and Evaluation":
     
     elif evaluation_selection == "Classification Reports":
         st.write("#### Classification Reports")
+        # Create two columns for side-by-side display
+    col1, col2 = st.columns(2)
+    
+    # Left column: Train Classification Report
+    with col1:
+        st.write("#### Training Set Classification Report")
+        try:
+            # Load and display the training classification report
+            with open("/mnt/data/classification_report_train.pkl", "rb") as file:
+                train_report = pickle.load(file)
+            st.text(train_report)
+        except FileNotFoundError:
+            st.error("Training classification report file not found.")
+        except Exception as e:
+            st.error(f"An error occurred while loading the training classification report: {e}")
+    
+    # Right column: Test Classification Report
+    with col2:
+        st.write("#### Test Set Classification Report")
+        try:
+            # Load and display the test classification report
+            with open("/mnt/data/classification_report_test.pkl", "rb") as file:
+                test_report = pickle.load(file)
+            st.text(test_report)
+        except FileNotFoundError:
+            st.error("Test classification report file not found.")
+        except Exception as e:
+            st.error(f"An error occurred while loading the test classification report: {e}")
     
 
 
