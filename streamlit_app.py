@@ -378,7 +378,7 @@ elif page_selection == "Fraud Detection Simulator":
                     st.dataframe(input_data.head())
 
                     # Standardize the input data using the loaded scaler
-                    standardized_data = scaler.transform(input_data)
+                    standardized_data = scaler.transform(input_data[:-2])
                     
                     # Ensure the input matches the model's expected dimensions
                     if standardized_data.shape[1] != 30:  # Assuming 'Time', 'Amount', and 'V1' to 'V28'
