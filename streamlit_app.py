@@ -214,8 +214,11 @@ elif page_selection == "Model Training and Evaluation":
         precision = precisions[closest_idx]
         recall = recalls[closest_idx]
 
+        # Compute the threshold to be considered fraudulent
+        threshold_to_be_fraudulent = 1 - cutoff_value
+
         st.write(f"**Cutoff Threshold**: {cutoff_value:.2f}")
-        st.write(f"**Treshhold to be considered fraudulent**: {tresholds:.2f})")
+        st.write(f"**Threshold to be considered fraudulent**: {threshold_to_be_fraudulent:.2f}")
         st.write(f"**Precision**: {precision:.2f}")
         st.write(f"**Recall**: {recall:.2f}")
 
