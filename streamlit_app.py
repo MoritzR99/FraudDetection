@@ -24,8 +24,11 @@ st.set_page_config(
     initial_sidebar_state='auto'
 )
 
-# Title and Sidebar Menu
-page_selection = st.sidebar.radio("", [
+# Title and Top Navigation Menu
+st.title("Credit Card Fraud Detection")
+
+# Top Navigation Menu
+page_selection = st.radio("Navigate to:", [
     "Introduction",
     "Data Overview",
     "Exploratory Data Analysis",
