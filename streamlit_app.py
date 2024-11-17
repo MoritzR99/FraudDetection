@@ -200,7 +200,8 @@ elif page_selection == "Model Training and Evaluation":
         [
             "Loss Curve",
             "Cutoff Analysis",
-            "Classification Reports and Confusion Matrices",
+            "Confusion Matrices",
+            "Classification Reports",
         ]
     )
 
@@ -252,8 +253,8 @@ elif page_selection == "Model Training and Evaluation":
         # Display cutoff graph
         load_graph("cutoff.pkl")
         
-    elif evaluation_selection == "Classification Reports and Confusion Matrices":
-        st.write("### Classification Reports and Confusion Matrices")
+    elif evaluation_selection == "Confusion Matrices":
+        st.write("### Confusion Matrices")
         # Create two columns for side-by-side display
     col1, col2 = st.columns(2)
     
@@ -266,6 +267,9 @@ elif page_selection == "Model Training and Evaluation":
     with col2:
         st.write("#### Test Set Confusion Matrix")
         load_numpy("confusion_matrix_test.pkl")
+
+    elif evaluation_selection == "Classification Reports":
+        st.write("### Classification Reports")
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
