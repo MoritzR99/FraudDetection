@@ -17,6 +17,17 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 
+# Load the cutoff_data.pkl at the start of the app
+try:
+    with open("cutoff_data.pkl", "rb") as file:
+        cutoff_data = pickle.load(file)  # Ensure cutoff_data is available globally
+except FileNotFoundError:
+    st.error("cutoff_data.pkl file not found. Please upload or place the file in the correct directory.")
+    cutoff_data = None  # Fallback to prevent errors later
+except Exception as e:
+    st.error(f"An error occurred while loading cutoff_data.pkl: {e}")
+    cutoff_data = None
+
 # Functions
 # Function to load graphs from .pkl files
 def load_graph(file_name):
