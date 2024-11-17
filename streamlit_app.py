@@ -21,7 +21,7 @@ from sklearn.metrics import classification_report
 
 # Load the saved scaler
 with open('scaler.pkl', 'rb') as f:
-scaler = pickle.load(f)
+    scaler = pickle.load(f)
 
 # Load the cutoff_data.pkl at the start of the app
 try:
