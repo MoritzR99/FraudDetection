@@ -70,10 +70,46 @@ elif page_selection == "Data Overview":
     except Exception as e:
         st.error(f"An unexpected error occurred: {e}")
 
+# Page selection for "Exploratory Data Analysis"
 elif page_selection == "Exploratory Data Analysis":
     st.balloons()  # Display balloons
     st.subheader("Exploratory Data Analysis")
     st.write("Data visualizations go here...")
+
+    def load_graph(file_name):
+        """Helper function to load and display graphs from .pkl files."""
+        try:
+            with open(file_name, "rb") as file:
+                fig = pickle.load(file)
+            st.pyplot(fig)
+        except FileNotFoundError as e:
+            st.error(f"Graph not found: {file_name}")
+        except Exception as e:
+            st.error(f"An error occurred while loading {file_name}: {e}")
+
+    # Display amount and count graphs side by side
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.write("### Non-Fraud Amount")
+        load_graph("non_fraud_amount.pkl")
+        
+        st.write("### Fraud Amount")
+        load_graph("fraud_amount.pkl")
+
+    with col2:
+        st.write("### Non-Fraud Count")
+        load_graph("non_fraud_count.pkl")
+        
+        st.write("### Fraud Count")
+        load_graph("fraud_count.pkl")
+
+    # Display remaining graphs
+    st.write("### Fraud Ratio")
+    load_graph("fraud_ratio.pkl")
+
+    st.write("### Average Amount by Class")
+    load_graph("average_amount_by_class.pkl")
 
 elif page_selection == "Feature Engineering":
     st.balloons()  # Display balloons
