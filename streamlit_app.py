@@ -354,7 +354,6 @@ elif page_selection == "Fraud Detection Simulator":
                 return predictions
             
             # Fraud Detection Simulator Page
-            elif page_selection == "Fraud Detection Simulator":
                 st.subheader("Fraud Detection Simulator")
                 st.write("Upload a CSV file with transaction data for fraud detection.")
             
