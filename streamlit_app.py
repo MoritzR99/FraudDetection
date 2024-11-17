@@ -243,8 +243,7 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Test Set Confusion Matrix")
         load_numpy("confusion_matrix_test.pkl")
     
-    elif evaluation_selection == "Classification Reports":
-        st.write("### Classification Reports")
+
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
