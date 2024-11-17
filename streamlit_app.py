@@ -221,7 +221,7 @@ elif page_selection == "Model Training and Evaluation":
         # Display cutoff graph
         load_graph("cutoff.pkl")
         
-  elif evaluation_selection == "Classification Reports and Confusion Matrices":
+      elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports and Confusion Matrices")
 
         # Tabs for Train and Test Data
