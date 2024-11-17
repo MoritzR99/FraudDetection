@@ -226,20 +226,42 @@ elif page_selection == "Model Training and Evaluation":
         load_graph("cutoff.pkl")
 
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
-        st.write("### Classification Reports and Confusion Matrices")
+    st.write("### Classification Reports and Confusion Matrices")
 
     try:
-        # Load classification reports
-        with open("classification_report_train.pkl", "rb") as file:
-            classification_report_train = pickle.load(file)
-        with open("classification_report_test.pkl", "rb") as file:
-            classification_report_test = pickle.load(file)
+        # Load confusion matrices
+        with open("/mnt/data/confusion_matrix_train.pkl", "rb") as file:
+            confusion_matrix_train = pickle.load(file)
+        with open("/mnt/data/confusion_matrix_test.pkl", "rb") as file:
+            confusion_matrix_test = pickle.load(file)
 
-        # Ensure classification reports are dictionaries
-        if isinstance(classification_report_train, str):
-            classification_report_train = eval(classification_report_train)
-        if isinstance(classification_report_test, str):
-            classification_report_test = eval(classification_report_test)
+        # Load classification reports
+        with open("/mnt/data/classification_report_train.pkl", "rb") as file:
+            classification_report_train_raw = pickle.load(file)
+        with open("/mnt/data/classification_report_test.pkl", "rb") as file:
+            classification_report_test_raw = pickle.load(file)
+
+        # Parse classification reports into DataFrames
+        def parse_classification_report_resilient(report_str):
+            lines = report_str.strip().split("\n")
+            headers = ["Class", "Precision", "Recall", "F1-Score", "Support"]
+            rows = []
+
+            for line in lines[2:]:  # Skip the first two lines (headers)
+                parts = line.split()
+                if len(parts) == 6:  # Standard row with class label
+                    rows.append(parts)
+                elif len(parts) == 5:  # Summary row without class label
+                    rows.append(["Overall"] + parts)
+                else:
+                    continue  # Ignore rows with unexpected formatting
+
+            # Normalize rows to the same length as headers
+            normalized_rows = [row[:len(headers)] + [""] * (len(headers) - len(row)) for row in rows]
+            return pd.DataFrame(normalized_rows, columns=headers)
+
+        classification_report_train_df = parse_classification_report_resilient(classification_report_train_raw)
+        classification_report_test_df = parse_classification_report_resilient(classification_report_test_raw)
 
         # Display classification reports in tables
         st.write("### Classification Reports")
@@ -247,19 +269,11 @@ elif page_selection == "Model Training and Evaluation":
 
         with col1:
             st.write("#### Training Set Classification Report")
-            train_report_df = pd.DataFrame(classification_report_train).transpose()
-            st.dataframe(train_report_df.style.format(precision=2))
+            st.dataframe(classification_report_train_df.style.format(precision=2))
 
         with col2:
             st.write("#### Test Set Classification Report")
-            test_report_df = pd.DataFrame(classification_report_test).transpose()
-            st.dataframe(test_report_df.style.format(precision=2))
-
-        # Load confusion matrices
-        with open("confusion_matrix_train.pkl", "rb") as file:
-            confusion_matrix_train = pickle.load(file)
-        with open("confusion_matrix_test.pkl", "rb") as file:
-            confusion_matrix_test = pickle.load(file)
+            st.dataframe(classification_report_test_df.style.format(precision=2))
 
         # Display confusion matrices side by side
         st.write("### Confusion Matrices")
@@ -287,6 +301,7 @@ elif page_selection == "Model Training and Evaluation":
         st.error(f"File not found: {e}")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
