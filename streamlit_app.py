@@ -63,7 +63,7 @@ page_selection = st.radio("", [
 
 # Display content and show balloons when a page is selected
 if page_selection == "Introduction":
-    st.balloons
+    st.balloons()
     st.subheader("Welcome to the Credit Card Fraud Detection App")
     st.write(
         "The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. "
