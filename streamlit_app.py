@@ -35,9 +35,7 @@ page_selection = st.radio("", [
     "Feature Engineering",
     "Model Training",
     "Evaluation",
-    "Fraud Detection Simulator",
-    "Download Report",
-    "Feedback"
+    "Fraud Detection Simulator"
 ], horizontal=True)
 
 # Display content and show balloons when a page is selected
@@ -131,14 +129,4 @@ elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
     st.subheader("Fraud Detection Simulator")
     st.write("Interactive fraud detection form...")
-
-elif page_selection == "Download Report":
-    st.balloons()  # Display balloons
-    st.subheader("Download Report")
-    st.write("Option to download a report of the analysis...")
-
-elif page_selection == "Feedback":
-    st.balloons()  # Display balloons
-    st.subheader("Feedback")
-    st.write("Provide your feedback here.")
 
