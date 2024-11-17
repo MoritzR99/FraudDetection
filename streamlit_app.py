@@ -13,6 +13,7 @@ from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import Recall
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import load_model
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
@@ -268,47 +269,7 @@ elif page_selection == "Fraud Detection Simulator":
 
     # Load the model
     try:
-        with open("model.pkl", "rb") as f:
-            model_dict = pickle.load(f)
-        
-        # Recreate the model from the architecture and weights
-        from tensorflow.keras.models import model_from_json
-        fraud_detection_model = model_from_json(model_dict["architecture"])
-        fraud_detection_model.set_weights(model_dict["weights"])
+        fraud_detection_model = load_model("model.h5")
     except FileNotFoundError:
-        st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
+        st.error("Model file not found. Please ensure 'model.h5' is in the same directory.")
         st.stop()
-    except Exception as e:
-        st.error(f"An error occurred while loading the model: {str(e)}")
-        st.stop()
-
-    # Input fields for user simulation
-    st.write("### Input Transaction Details")
-    time = st.number_input("Transaction Time (seconds since first transaction)", value=0, min_value=0)
-    amount = st.number_input("Transaction Amount", value=0.0, min_value=0.0, step=0.01)
-
-    # Input PCA-transformed V features
-    st.write("### Input PCA-Transformed Features (V1 to V28)")
-    v_features = [
-        st.number_input(f"V{i}", value=0.0, step=0.01) for i in range(1, 29)
-    ]
-
-    # Prepare input for the model
-    input_data = np.array([[time, amount] + v_features])
-
-    # Predict fraud
-    if st.button("Detect Fraud"):
-        try:
-            # Ensure input shape matches the model's expected input
-            input_data = np.array(input_data, dtype=np.float32)  # Convert to float32 for TensorFlow compatibility
-            prediction = fraud_detection_model.predict(input_data)
-
-            # Since it's a binary classification, the output is usually a probability
-            fraud_probability = prediction[0][0]  # Assuming the output shape is [1, 1]
-
-            if fraud_probability > 0.5:  # Adjust threshold if needed
-                st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
-            else:
-                st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
-        except Exception as e:
-            st.error(f"An error occurred during prediction: {str(e)}")
