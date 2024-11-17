@@ -269,9 +269,17 @@ elif page_selection == "Fraud Detection Simulator":
     # Load the model
     try:
         with open("model.pkl", "rb") as f:
-            fraud_detection_model = pickle.load(f)
+            model_dict = pickle.load(f)
+        
+        # Recreate the model from the architecture and weights
+        from tensorflow.keras.models import model_from_json
+        fraud_detection_model = model_from_json(model_dict["architecture"])
+        fraud_detection_model.set_weights(model_dict["weights"])
     except FileNotFoundError:
         st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
+        st.stop()
+    except Exception as e:
+        st.error(f"An error occurred while loading the model: {str(e)}")
         st.stop()
 
     # Input fields for user simulation
@@ -291,10 +299,14 @@ elif page_selection == "Fraud Detection Simulator":
     # Predict fraud
     if st.button("Detect Fraud"):
         try:
+            # Ensure input shape matches the model's expected input
+            input_data = np.array(input_data, dtype=np.float32)  # Convert to float32 for TensorFlow compatibility
             prediction = fraud_detection_model.predict(input_data)
-            fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
 
-            if prediction[0] == 1:
+            # Since it's a binary classification, the output is usually a probability
+            fraud_probability = prediction[0][0]  # Assuming the output shape is [1, 1]
+
+            if fraud_probability > 0.5:  # Adjust threshold if needed
                 st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
             else:
                 st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
