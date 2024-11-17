@@ -264,8 +264,8 @@ elif page_selection == "Model Training and Evaluation":
 
 
 elif page_selection == "Fraud Detection Simulator":
-        st.subheader("Fraud Detection Simulator")
-        # Dropdown to select input mode
+    st.subheader("Fraud Detection Simulator")
+    # Dropdown to select input mode
     st.sidebar.title("Fraud Detection Simulator")
     input_mode = st.sidebar.selectbox("Select Input Mode", ["Manual Input", "Upload CSV"])
     
