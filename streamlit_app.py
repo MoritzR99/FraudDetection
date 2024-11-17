@@ -202,7 +202,7 @@ elif page_selection == "Model Training and Evaluation":
 
         # Slider for cutoff adjustment
         cutoff_value = st.slider(
-            "Adjust Cutoff Threshold (keep in mind, the cutoff is not the treshhold shown in the graph below, the graph below displays the value which is used to determine after which probability the transaction will be considered fraudulent and therefore is: 1- cutoff",
+            "Adjust Cutoff Threshold",
             min_value=float(thresholds.min()),
             max_value=float(thresholds.max()),
             value=0.5,
