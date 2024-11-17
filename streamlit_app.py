@@ -312,6 +312,16 @@ elif page_selection == "Fraud Detection Simulator":
         
         # Prepare input data
         input_data = np.array([[time, amount] + v_features], dtype=np.float32)
+
+        # Load the saved scaler
+        with open('scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+
+        # Standardize the input data using the loaded scaler
+        if st.button("Process Input"):
+            standardized_data = scaler.transform(input_data)
+            st.write("Standardized Input Data:")
+            st.write(standardized_data)
         
         # Predict fraud
         if st.button("Detect Fraud"):
