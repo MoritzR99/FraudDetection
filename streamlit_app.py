@@ -268,7 +268,7 @@ elif page_selection == "Model Training and Evaluation":
     except FileNotFoundError as e:
         st.error(f"File not found: {e}")
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.exception(e)
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
