@@ -244,24 +244,22 @@ elif page_selection == "Model Training and Evaluation":
             load_numpy("confusion_matrix_test.pkl")
     
     elif evaluation_selection == "Classification Reports":
-    st.write("#### Classification Reports")
+        st.write("#### Classification Reports")
+        
+        # Load the DataFrames
+        classification_train = pd.read_pickle("classification_report_train.pk")
+        classification_test = pd.read_pickle("classification_report_test.pk")
     
-    # Load the DataFrames
-    classification_train = pd.read_pickle("classification_report_train.pk")
-    classification_test = pd.read_pickle("classification_report_test.pk")
-
-    # Create two columns for side-by-side display
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.write("##### Train Classification Report")
-        st.dataframe(classification_train)
-
-    with col2:
-        st.write("##### Test Classification Report")
-        st.dataframe(classification_test)
+        # Create two columns for side-by-side display
+        col1, col2 = st.columns(2)
     
-
+        with col1:
+            st.write("##### Train Classification Report")
+            st.dataframe(classification_train)
+    
+        with col2:
+            st.write("##### Test Classification Report")
+            st.dataframe(classification_test)
 
 
 elif page_selection == "Fraud Detection Simulator":
