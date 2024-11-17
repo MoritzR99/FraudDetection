@@ -27,8 +27,13 @@ st.set_page_config(
 # Title and Top Navigation Menu
 st.title("Credit Card Fraud Detection")
 
+import streamlit as st
+
+# Title
+st.title("Credit Card Fraud Detection")
+
 # Top Navigation Menu
-page_selection = st.radio("Navigate to:", [
+page_selection = st.radio("", [
     "Introduction",
     "Data Overview",
     "Exploratory Data Analysis",
@@ -37,4 +42,46 @@ page_selection = st.radio("Navigate to:", [
     "Fraud Detection Simulator",
     "Download Report",
     "Feedback"
-])
+], horizontal=True)
+
+# Display content and show balloons when a page is selected
+if page_selection == "Introduction":
+    st.balloons()  # Display balloons
+    st.subheader("Welcome to the Credit Card Fraud Detection App")
+    st.write("This app helps detect fraud using machine learning.")
+
+elif page_selection == "Data Overview":
+    st.balloons()  # Display balloons
+    st.subheader("Data Overview")
+    st.write("Here is a summary of the dataset...")
+
+elif page_selection == "Exploratory Data Analysis":
+    st.balloons()  # Display balloons
+    st.subheader("Exploratory Data Analysis")
+    st.write("Data visualizations go here...")
+
+elif page_selection == "Feature Engineering":
+    st.balloons()  # Display balloons
+    st.subheader("Feature Engineering")
+    st.write("Feature transformations and importance analysis...")
+
+elif page_selection == "Model Training and Evaluation":
+    st.balloons()  # Display balloons
+    st.subheader("Model Training and Evaluation")
+    st.write("Model performance metrics...")
+
+elif page_selection == "Fraud Detection Simulator":
+    st.balloons()  # Display balloons
+    st.subheader("Fraud Detection Simulator")
+    st.write("Interactive fraud detection form...")
+
+elif page_selection == "Download Report":
+    st.balloons()  # Display balloons
+    st.subheader("Download Report")
+    st.write("Option to download a report of the analysis...")
+
+elif page_selection == "Feedback":
+    st.balloons()  # Display balloons
+    st.subheader("Feedback")
+    st.write("Provide your feedback here.")
+
