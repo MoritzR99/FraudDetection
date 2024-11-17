@@ -279,48 +279,26 @@ elif page_selection == "Fraud Detection Simulator":
         with open("model.pkl", "rb") as f:
             fraud_detection_model = pickle.load(f)
     
-        # File upload
-        uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+        # Input fields for user simulation
+        st.write("### Input Transaction Details")
+        time = st.number_input("Transaction Time (seconds since first transaction)", value=0, min_value=0)
+        amount = st.number_input("Transaction Amount", value=0.0, min_value=0.0, step=0.01)
     
-        if uploaded_file:
-            try:
-                # Read the uploaded CSV file
-                transactions_df = pd.read_csv(uploaded_file)
+        # Input PCA-transformed V features
+        st.write("### Input PCA-Transformed Features (V1 to V28)")
+        v_features = [
+            st.number_input(f"V{i}", value=0.0, step=0.01) for i in range(1, 29)
+        ]
     
-                # Display the uploaded data
-                st.write("### Uploaded Transactions")
-                st.dataframe(transactions_df.head())
+        # Prepare input for the model
+        input_data = np.array([[time, amount] + v_features])
     
-                # Check if the required columns are present
-                required_columns = ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)]
-                if all(column in transactions_df.columns for column in required_columns):
-                    # Prepare input data
-                    input_data = transactions_df[required_columns].values
+        # Predict fraud
+        if st.button("Detect Fraud"):
+            prediction = fraud_detection_model.predict(input_data)
+            fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
     
-                    # Make predictions
-                    predictions = fraud_detection_model.predict(input_data)
-                    fraud_probabilities = fraud_detection_model.predict_proba(input_data)[:, 1]
-    
-                    # Add predictions and probabilities to the dataframe
-                    transactions_df["Fraud Prediction"] = predictions
-                    transactions_df["Fraud Probability"] = fraud_probabilities
-    
-                    # Display the results
-                    st.write("### Prediction Results")
-                    st.dataframe(transactions_df)
-    
-                    # Allow users to download the results
-                    csv = transactions_df.to_csv(index=False)
-                    st.download_button(
-                        label="Download Prediction Results as CSV",
-                        data=csv,
-                        file_name="fraud_detection_results.csv",
-                        mime="text/csv",
-                    )
-                else:
-                    st.error(f"The uploaded file must contain the following columns: {', '.join(required_columns)}")
-            except Exception as e:
-                st.error(f"An error occurred while processing the file: {e}")
-        else:
-            st.info("Please upload a CSV file to get started.")
-        
+            if prediction[0] == 1:
+                st.error(f"The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
+            else:
+                st.success(f"The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
