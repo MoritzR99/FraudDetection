@@ -221,45 +221,45 @@ elif page_selection == "Model Training and Evaluation":
         # Display cutoff graph
         load_graph("cutoff.pkl")
         
-        elif evaluation_selection == "Classification Reports and Confusion Matrices":
-            st.write("### Classification Reports and Confusion Matrices")
-    
-            # Tabs for Train and Test Data
-            tab1, tab2 = st.tabs(["Train Data", "Test Data"])
-    
-            def display_report_and_matrix(report_file, matrix_file, dataset_type):
-                """Helper function to display classification report and confusion matrix."""
-                try:
-                    # Load and display classification report
-                    with open(report_file, "rb") as file:
-                        classification_report = pickle.load(file)
-                    st.write(f"**{dataset_type} Classification Report**")
-                    st.text(classification_report)
-    
-                    # Load and display confusion matrix
-                    with open(matrix_file, "rb") as file:
-                        fig = pickle.load(file)
-                    st.write(f"**{dataset_type} Confusion Matrix**")
-                    st.pyplot(fig)
-    
-                except FileNotFoundError as e:
-                    st.error(f"File not found: {e}")
-                except Exception as e:
-                    st.error(f"An error occurred while loading files: {e}")
-    
-            with tab1:  # Train Data Tab
-                display_report_and_matrix(
-                    "/mnt/data/classification_report_train.pkl",
-                    "/mnt/data/confusion_matrix_train.pkl",
-                    "Train"
-                )
-    
-            with tab2:  # Test Data Tab
-                display_report_and_matrix(
-                    "/mnt/data/classification_report_test.pkl",
-                    "/mnt/data/confusion_matrix_test.pkl",
-                    "Test"
-                )
+    elif evaluation_selection == "Classification Reports and Confusion Matrices":
+        st.write("### Classification Reports and Confusion Matrices")
+
+        # Tabs for Train and Test Data
+        tab1, tab2 = st.tabs(["Train Data", "Test Data"])
+
+        def display_report_and_matrix(report_file, matrix_file, dataset_type):
+            """Helper function to display classification report and confusion matrix."""
+            try:
+                # Load and display classification report
+                with open(report_file, "rb") as file:
+                    classification_report = pickle.load(file)
+                st.write(f"**{dataset_type} Classification Report**")
+                st.text(classification_report)
+
+                # Load and display confusion matrix
+                with open(matrix_file, "rb") as file:
+                    fig = pickle.load(file)
+                st.write(f"**{dataset_type} Confusion Matrix**")
+                st.pyplot(fig)
+
+            except FileNotFoundError as e:
+                st.error(f"File not found: {e}")
+            except Exception as e:
+                st.error(f"An error occurred while loading files: {e}")
+
+        with tab1:  # Train Data Tab
+            display_report_and_matrix(
+                "/mnt/data/classification_report_train.pkl",
+                "/mnt/data/confusion_matrix_train.pkl",
+                "Train"
+            )
+
+        with tab2:  # Test Data Tab
+            display_report_and_matrix(
+                "/mnt/data/classification_report_test.pkl",
+                "/mnt/data/confusion_matrix_test.pkl",
+                "Test"
+            )
        
 
 elif page_selection == "Fraud Detection Simulator":
