@@ -61,7 +61,7 @@ elif page_selection == "Data Overview":
         st.dataframe(head_table)  # Display head table
 
         st.write("### Dataset Description:")
-        st.write("Here, two of the non transformed columns get describes. This shows, that our target is binary, whereas 1 describes fraudulent transactions, while 0 describes non-fraudulent tansactions. Furthermore, the dataset is strongly biased towards non fraudulant transactions as it can be seen in the precentiles.")
+        st.write("Here, two of the non transformed columns get describes. This shows, that our target is binary, whereas 1 describes fraudulent transactions, while 0 describes non-fraudulent tansactions. Furthermore, the dataset is strongly biased towards non fraudulant transactions as it can be seen in the percentiles.")
         st.dataframe(describe_table)  # Display describe table
 
     except FileNotFoundError as e:
