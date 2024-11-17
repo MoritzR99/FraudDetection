@@ -63,7 +63,7 @@ page_selection = st.radio("", [
 
 # Display content and show balloons when a page is selected
 if page_selection == "Introduction":
-    st.balloons()  # Display balloons
+    st.balloons
     st.subheader("Welcome to the Credit Card Fraud Detection App")
     st.write(
         "The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. "
@@ -85,7 +85,6 @@ if page_selection == "Introduction":
     
 # Page selection for "Data Overview"
 elif page_selection == "Data Overview":
-    st.balloons()  # Display balloons
     st.subheader("Data Overview")
     st.write("Since most columns of the used dataset were PCA transformed, an extensive data overview is not meaningful here. Nevertheless, two tables will be shown below to give an general idea about the nature of the underlying dataset:")
 
@@ -110,7 +109,6 @@ elif page_selection == "Data Overview":
 
 # Page selection for "Exploratory Data Analysis"
 elif page_selection == "Exploratory Data Analysis":
-    st.balloons()  # Display balloons
     st.subheader("Exploratory Data Analysis")
     st.write("Select a visualization from the dropdown menu below:")
 
@@ -158,12 +156,10 @@ elif page_selection == "Exploratory Data Analysis":
         load_graph("average_amount_by_class.pkl")
         
 elif page_selection == "Feature Engineering":
-    st.balloons()  # Display balloons
     st.subheader("Feature Engineering")
     st.write("No additional features were added, as most of them are already PCA transformed. The only transformation used, was the Standart Scaler to normalize features for the ANN model.")
 
 elif page_selection == "Model Training and Evaluation":
-    st.balloons()  # Display balloons
     st.subheader("Model Training and Evaluation")
     st.write("Explore model performance metrics using the dropdown menu below:")
 
@@ -225,88 +221,9 @@ elif page_selection == "Model Training and Evaluation":
         # Display cutoff graph
         load_graph("cutoff.pkl")
 
-    elif evaluation_selection == "Classification Reports and Confusion Matrices":
-        st.write("### Classification Reports and Confusion Matrices")
-
-        try:
-            # Load confusion matrices
-            with open("/mnt/data/confusion_matrix_train.pkl", "rb") as file:
-                confusion_matrix_train = pickle.load(file)
-            with open("/mnt/data/confusion_matrix_test.pkl", "rb") as file:
-                confusion_matrix_test = pickle.load(file)
-    
-            # Load classification reports
-            with open("/mnt/data/classification_report_train.pkl", "rb") as file:
-                classification_report_train_raw = pickle.load(file)
-            with open("/mnt/data/classification_report_test.pkl", "rb") as file:
-                classification_report_test_raw = pickle.load(file)
-    
-            # Parse classification reports into DataFrames
-            def parse_classification_report_resilient(report_str):
-                lines = report_str.strip().split("\n")
-                headers = ["Class", "Precision", "Recall", "F1-Score", "Support"]
-                rows = []
-    
-                for line in lines[2:]:  # Skip the first two lines (headers)
-                    parts = line.split()
-                    if len(parts) == 6:  # Standard row with class label
-                        rows.append(parts)
-                    elif len(parts) == 5:  # Summary row without class label
-                        rows.append(["Overall"] + parts)
-                    else:
-                        continue  # Ignore rows with unexpected formatting
-    
-                # Normalize rows to the same length as headers
-                normalized_rows = [row[:len(headers)] + [""] * (len(headers) - len(row)) for row in rows]
-                return pd.DataFrame(normalized_rows, columns=headers)
-    
-            classification_report_train_df = parse_classification_report_resilient(classification_report_train_raw)
-            classification_report_test_df = parse_classification_report_resilient(classification_report_test_raw)
-    
-            # Display classification reports in tables
-            st.write("### Classification Reports")
-            col1, col2 = st.columns(2)
-    
-            with col1:
-                st.write("#### Training Set Classification Report")
-                st.dataframe(classification_report_train_df.style.format(precision=2))
-    
-            with col2:
-                st.write("#### Test Set Classification Report")
-                st.dataframe(classification_report_test_df.style.format(precision=2))
-    
-            # Display confusion matrices side by side
-            st.write("### Confusion Matrices")
-            col1, col2 = st.columns(2)
-    
-            with col1:
-                st.write("#### Training Set Confusion Matrix")
-                fig, ax = plt.subplots(figsize=(5, 4))
-                sns.heatmap(confusion_matrix_train, annot=True, fmt="d", cmap="Blues", ax=ax)
-                ax.set_title("Confusion Matrix - Training Set")
-                ax.set_xlabel("Predicted")
-                ax.set_ylabel("Actual")
-                st.pyplot(fig)
-    
-            with col2:
-                st.write("#### Test Set Confusion Matrix")
-                fig, ax = plt.subplots(figsize=(5, 4))
-                sns.heatmap(confusion_matrix_test, annot=True, fmt="d", cmap="Blues", ax=ax)
-                ax.set_title("Confusion Matrix - Test Set")
-                ax.set_xlabel("Predicted")
-                ax.set_ylabel("Actual")
-                st.pyplot(fig)
-    
-        except FileNotFoundError as e:
-            st.error(f"File not found: {e}")
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
-
-
-
+   
 
 elif page_selection == "Fraud Detection Simulator":
-    st.balloons()  # Display balloons
     st.subheader("Fraud Detection Simulator")
     st.write("Interactive fraud detection form...")
 
