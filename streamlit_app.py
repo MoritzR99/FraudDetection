@@ -353,48 +353,48 @@ elif page_selection == "Fraud Detection Simulator":
             fraud_detection_model = load_model("model.h5")
                         
             # Fraud Detection Simulator Page
-                st.subheader("Fraud Detection Simulator")
-                st.write("Upload a CSV file with transaction data for fraud detection.")
+            st.subheader("Fraud Detection Simulator")
+            st.write("Upload a CSV file with transaction data for fraud detection.")
+        
+            uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
             
-                uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
-                
-                if uploaded_file is not None:
-                    try:
-                        # Read the uploaded CSV file
-                        input_data = pd.read_csv(uploaded_file)
+            if uploaded_file is not None:
+                try:
+                    # Read the uploaded CSV file
+                    input_data = pd.read_csv(uploaded_file)
+                    
+                    # Display the uploaded data
+                    st.write("### Uploaded Data Preview")
+                    st.dataframe(input_data.head())
+                    
+                    # Preprocess the input data
+                    processed_data = preprocess_input(input_data)
+                    
+                    # Ensure the input matches the model's expected dimensions
+                    if processed_data.shape[1] != 30:  # Assuming 'Time', 'Amount', and 'V1' to 'V28'
+                        st.error("Uploaded CSV does not have the correct structure. Ensure it matches the required format.")
+                    else:
+                        # Predict fraud
+                        st.write("### Predicting Fraud...")
+                        predictions = predict_fraud(processed_data)
                         
-                        # Display the uploaded data
-                        st.write("### Uploaded Data Preview")
-                        st.dataframe(input_data.head())
+                        # Add predictions to the dataframe
+                        input_data['Fraud Prediction'] = (predictions > 0.5).astype(int)  # Binary classification
+                        input_data['Fraud Probability'] = predictions
                         
-                        # Preprocess the input data
-                        processed_data = preprocess_input(input_data)
+                        # Display predictions
+                        st.write("### Prediction Results")
+                        st.dataframe(input_data[['Time', 'Amount', 'Fraud Prediction', 'Fraud Probability']].head())
                         
-                        # Ensure the input matches the model's expected dimensions
-                        if processed_data.shape[1] != 30:  # Assuming 'Time', 'Amount', and 'V1' to 'V28'
-                            st.error("Uploaded CSV does not have the correct structure. Ensure it matches the required format.")
-                        else:
-                            # Predict fraud
-                            st.write("### Predicting Fraud...")
-                            predictions = predict_fraud(processed_data)
-                            
-                            # Add predictions to the dataframe
-                            input_data['Fraud Prediction'] = (predictions > 0.5).astype(int)  # Binary classification
-                            input_data['Fraud Probability'] = predictions
-                            
-                            # Display predictions
-                            st.write("### Prediction Results")
-                            st.dataframe(input_data[['Time', 'Amount', 'Fraud Prediction', 'Fraud Probability']].head())
-                            
-                            # Downloadable output
-                            csv_output = input_data.to_csv(index=False)
-                            st.download_button(
-                                label="Download Prediction Results",
-                                data=csv_output,
-                                file_name="fraud_detection_results.csv",
-                                mime="text/csv"
-                            )
-                    except Exception as e:
-                        st.error(f"An error occurred: {e}")
-            
-            
+                        # Downloadable output
+                        csv_output = input_data.to_csv(index=False)
+                        st.download_button(
+                            label="Download Prediction Results",
+                            data=csv_output,
+                            file_name="fraud_detection_results.csv",
+                            mime="text/csv"
+                        )
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+        
+        
