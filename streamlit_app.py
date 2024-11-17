@@ -228,48 +228,59 @@ elif page_selection == "Model Training and Evaluation":
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports and Confusion Matrices")
 
-        try:
-            # Load and display classification reports as text
-            with open("classification_report_train.pkl", "rb") as file:
-                classification_report_train = pickle.load(file)
-            with open("classification_report_test.pkl", "rb") as file:
-                classification_report_test = pickle.load(file)
+    try:
+        # Load classification reports
+        with open("classification_report_train.pkl", "rb") as file:
+            classification_report_train = pickle.load(file)
+        with open("classification_report_test.pkl", "rb") as file:
+            classification_report_test = pickle.load(file)
 
+        # Display classification reports in tables
+        st.write("### Classification Reports")
+        col1, col2 = st.columns(2)
+
+        with col1:
             st.write("#### Training Set Classification Report")
-            st.text(classification_report_train)
+            train_report_df = pd.DataFrame(classification_report_train).transpose()
+            st.dataframe(train_report_df.style.format(precision=2))
 
+        with col2:
             st.write("#### Test Set Classification Report")
-            st.text(classification_report_test)
+            test_report_df = pd.DataFrame(classification_report_test).transpose()
+            st.dataframe(test_report_df.style.format(precision=2))
 
-            # Load confusion matrices
-            with open("confusion_matrix_train.pkl", "rb") as file:
-                confusion_matrix_train = pickle.load(file)
-            with open("confusion_matrix_test.pkl", "rb") as file:
-                confusion_matrix_test = pickle.load(file)
+        # Load confusion matrices
+        with open("confusion_matrix_train.pkl", "rb") as file:
+            confusion_matrix_train = pickle.load(file)
+        with open("confusion_matrix_test.pkl", "rb") as file:
+            confusion_matrix_test = pickle.load(file)
 
-            # Visualize confusion matrices as heatmaps
-            st.write("### Confusion Matrices")
+        # Display confusion matrices side by side
+        st.write("### Confusion Matrices")
+        col1, col2 = st.columns(2)
 
+        with col1:
             st.write("#### Training Set Confusion Matrix")
-            fig, ax = plt.subplots(figsize=(6, 4))
+            fig, ax = plt.subplots(figsize=(5, 4))
             sns.heatmap(confusion_matrix_train, annot=True, fmt="d", cmap="Blues", ax=ax)
             ax.set_title("Confusion Matrix - Training Set")
             ax.set_xlabel("Predicted")
             ax.set_ylabel("Actual")
             st.pyplot(fig)
 
+        with col2:
             st.write("#### Test Set Confusion Matrix")
-            fig, ax = plt.subplots(figsize=(6, 4))
+            fig, ax = plt.subplots(figsize=(5, 4))
             sns.heatmap(confusion_matrix_test, annot=True, fmt="d", cmap="Blues", ax=ax)
             ax.set_title("Confusion Matrix - Test Set")
             ax.set_xlabel("Predicted")
             ax.set_ylabel("Actual")
             st.pyplot(fig)
 
-        except FileNotFoundError as e:
-            st.error(f"File not found: {e}")
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+    except FileNotFoundError as e:
+        st.error(f"File not found: {e}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 
 elif page_selection == "Fraud Detection Simulator":
