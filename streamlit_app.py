@@ -216,7 +216,7 @@ elif page_selection == "Model Training and Evaluation":
         st.write(f"**Cutoff Threshold**: {cutoff_value:.2f}")
         st.write(f"**Threshold to be considered fraudulent**: {threshold_to_be_fraudulent:.2f}")
         st.write(f"**Precision**: {precision:.2f}")
-        st.write(f"**Recall**: {recall:.2f}")
+        st.text(classification_report)
 
         # Display cutoff graph
         load_graph("cutoff.pkl")
