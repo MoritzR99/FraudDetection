@@ -274,54 +274,53 @@ elif page_selection == "Fraud Detection Simulator":
         st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
     
         st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
-
+        
+        # Load the model
+        with open("model.pkl", "rb") as f:
+            fraud_detection_model = pickle.load(f)
     
-    # Load the model
-    with open("model.pkl", "rb") as f:
-        fraud_detection_model = pickle.load(f)
-
-    # File upload
-    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
-
-    if uploaded_file:
-        try:
-            # Read the uploaded CSV file
-            transactions_df = pd.read_csv(uploaded_file)
-
-            # Display the uploaded data
-            st.write("### Uploaded Transactions")
-            st.dataframe(transactions_df.head())
-
-            # Check if the required columns are present
-            required_columns = ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)]
-            if all(column in transactions_df.columns for column in required_columns):
-                # Prepare input data
-                input_data = transactions_df[required_columns].values
-
-                # Make predictions
-                predictions = fraud_detection_model.predict(input_data)
-                fraud_probabilities = fraud_detection_model.predict_proba(input_data)[:, 1]
-
-                # Add predictions and probabilities to the dataframe
-                transactions_df["Fraud Prediction"] = predictions
-                transactions_df["Fraud Probability"] = fraud_probabilities
-
-                # Display the results
-                st.write("### Prediction Results")
-                st.dataframe(transactions_df)
-
-                # Allow users to download the results
-                csv = transactions_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Prediction Results as CSV",
-                    data=csv,
-                    file_name="fraud_detection_results.csv",
-                    mime="text/csv",
-                )
-            else:
-                st.error(f"The uploaded file must contain the following columns: {', '.join(required_columns)}")
-        except Exception as e:
-            st.error(f"An error occurred while processing the file: {e}")
-    else:
-        st.info("Please upload a CSV file to get started.")
+        # File upload
+        uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
     
+        if uploaded_file:
+            try:
+                # Read the uploaded CSV file
+                transactions_df = pd.read_csv(uploaded_file)
+    
+                # Display the uploaded data
+                st.write("### Uploaded Transactions")
+                st.dataframe(transactions_df.head())
+    
+                # Check if the required columns are present
+                required_columns = ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)]
+                if all(column in transactions_df.columns for column in required_columns):
+                    # Prepare input data
+                    input_data = transactions_df[required_columns].values
+    
+                    # Make predictions
+                    predictions = fraud_detection_model.predict(input_data)
+                    fraud_probabilities = fraud_detection_model.predict_proba(input_data)[:, 1]
+    
+                    # Add predictions and probabilities to the dataframe
+                    transactions_df["Fraud Prediction"] = predictions
+                    transactions_df["Fraud Probability"] = fraud_probabilities
+    
+                    # Display the results
+                    st.write("### Prediction Results")
+                    st.dataframe(transactions_df)
+    
+                    # Allow users to download the results
+                    csv = transactions_df.to_csv(index=False)
+                    st.download_button(
+                        label="Download Prediction Results as CSV",
+                        data=csv,
+                        file_name="fraud_detection_results.csv",
+                        mime="text/csv",
+                    )
+                else:
+                    st.error(f"The uploaded file must contain the following columns: {', '.join(required_columns)}")
+            except Exception as e:
+                st.error(f"An error occurred while processing the file: {e}")
+        else:
+            st.info("Please upload a CSV file to get started.")
+        
