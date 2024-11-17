@@ -183,35 +183,32 @@ elif page_selection == "Model Training and Evaluation":
 
     elif evaluation_selection == "Cutoff Analysis":
         st.write("### Cutoff Analysis")
-        # Load cutoff data to create an adjustable graph
-        try:
-            with open("cutoff_data.pkl", "rb") as file:
-                cutoff_data = pickle.load(file)
 
-            # Adjustable cutoff slider
-            cutoff_value = st.slider(
-                "Adjust Cutoff Value",
-                min_value=0.0,
-                max_value=1.0,
-                value=0.5,
-                step=0.01,
-            )
+        # Adjustable cutoff slider
+        thresholds = cutoff_data['thresholds']
+        precisions = cutoff_data['precisions']
+        recalls = cutoff_data['recalls']
 
-            # Filter data for the current cutoff value
-            cutoff_filtered = cutoff_data[cutoff_data["cutoff"] == cutoff_value]
-            if not cutoff_filtered.empty:
-                precision = cutoff_filtered["precision"].values[0]
-                recall = cutoff_filtered["recall"].values[0]
-                st.write(f"**Precision**: {precision:.2f}")
-                st.write(f"**Recall**: {recall:.2f}")
+        # Slider for cutoff adjustment
+        cutoff_value = st.slider(
+            "Adjust Cutoff Threshold",
+            min_value=float(thresholds.min()),
+            max_value=float(thresholds.max()),
+            value=0.5,
+            step=0.01,
+        )
 
-            # Load the cutoff graph
-            load_graph("cutoff.pkl")
+        # Find the closest precision and recall for the selected cutoff value
+        closest_idx = (abs(thresholds - cutoff_value)).argmin()
+        precision = precisions[closest_idx]
+        recall = recalls[closest_idx]
 
-        except FileNotFoundError:
-            st.error("Cutoff data not found.")
-        except Exception as e:
-            st.error(f"An error occurred while loading cutoff data: {e}")
+        st.write(f"**Cutoff Threshold**: {cutoff_value:.2f}")
+        st.write(f"**Precision**: {precision:.2f}")
+        st.write(f"**Recall**: {recall:.2f}")
+
+        # Display cutoff graph
+        load_graph("cutoff.pkl")
 
     elif evaluation_selection == "Classification Reports and Confusion Matrices":
         st.write("### Classification Reports")
@@ -239,6 +236,7 @@ elif page_selection == "Model Training and Evaluation":
             st.error(f"File not found: {e}")
         except Exception as e:
             st.error(f"An error occurred: {e}")
+
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
