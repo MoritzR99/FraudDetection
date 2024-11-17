@@ -265,55 +265,59 @@ elif page_selection == "Model Training and Evaluation":
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
-    st.write("Upload a CSV file containing transaction details to predict fraud for multiple transactions.")
+    st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
 
     # Load the model
-    with open("model.pkl", "rb") as f:
-        fraud_detection_model = pickle.load(f)
+    try:
+        fraud_detection_model = load_model("model.h5")
+    except FileNotFoundError:
+        st.error("Model file not found. Please ensure 'model.h5' is in the same directory.")
+        st.stop()
+    # Sidebar for feature input
+st.sidebar.header("Input Transaction Details")
+st.sidebar.write("Use the sliders to input transaction details.")
 
-    # File upload
-    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+# Input sliders for transaction details
+time = st.sidebar.slider("Transaction Time (seconds since first transaction)", min_value=0, max_value=100000, value=0, step=100)
+amount = st.sidebar.slider("Transaction Amount", min_value=0.0, max_value=10000.0, value=0.0, step=0.01)
 
-    if uploaded_file:
-        try:
-            # Read the uploaded CSV file
-            transactions_df = pd.read_csv(uploaded_file)
+# Input sliders for PCA-transformed V features
+st.sidebar.write("PCA-Transformed Features (V1 to V28)")
+v_features = [
+    st.sidebar.slider(f"V{i}", min_value=-50.0, max_value=50.0, value=0.0, step=0.1) for i in range(1, 29)
+]
 
-            # Display the uploaded data
-            st.write("### Uploaded Transactions")
-            st.dataframe(transactions_df.head())
+# Prepare input data
+input_data = np.array([[time, amount] + v_features], dtype=np.float32)
 
-            # Check if the required columns are present
-            required_columns = ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)]
-            if all(column in transactions_df.columns for column in required_columns):
-                # Prepare input data
-                input_data = transactions_df[required_columns].values
+# Predict fraud
+if st.button("Detect Fraud"):
+    try:
+        prediction = fraud_detection_model.predict(input_data)
+        fraud_probability = prediction[0][0]  # Assuming binary classification with a single output neuron
 
-                # Make predictions
-                predictions = fraud_detection_model.predict(input_data)
-                fraud_probabilities = fraud_detection_model.predict_proba(input_data)[:, 1]
+        if fraud_probability > 0.5:  # Threshold for fraud
+            st.error(f"🚨 The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
+        else:
+            st.success(f"✅ The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
+        
+        # Display input summary as a table
+        st.write("### Input Summary")
+        summary = pd.DataFrame({
+            "Feature": ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)],
+            "Value": [time, amount] + v_features
+        })
+        st.table(summary)
 
-                # Add predictions and probabilities to the dataframe
-                transactions_df["Fraud Prediction"] = predictions
-                transactions_df["Fraud Probability"] = fraud_probabilities
+        # Download button for the summary
+        csv = summary.to_csv(index=False)
+        st.download_button("Download Input Summary as CSV", csv, file_name="input_summary.csv")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {str(e)}")
 
-                # Display the results
-                st.write("### Prediction Results")
-                st.dataframe(transactions_df)
-
-                # Allow users to download the results
-                csv = transactions_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Prediction Results as CSV",
-                    data=csv,
-                    file_name="fraud_detection_results.csv",
-                    mime="text/csv",
-                )
-            else:
-                st.error(f"The uploaded file must contain the following columns: {', '.join(required_columns)}")
-        except Exception as e:
-            st.error(f"An error occurred while processing the file: {e}")
-    else:
-        st.info("Please upload a CSV file to get started.")
+# Footer with instructions
+st.write("---")
+st.write("Adjust the features in the sidebar and click 'Detect Fraud' to see the results.")
+st.write("Feel free to share the public link with others!")
 
 
