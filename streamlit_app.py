@@ -30,7 +30,7 @@ except Exception as e:
 
 # Functions
 # Function to load graphs from .pkl files
-    def load_graph(file_name):
+def load_graph(file_name):
         """Helper function to load and display graphs from .pkl files."""
         try:
             with open(file_name, "rb") as file:
