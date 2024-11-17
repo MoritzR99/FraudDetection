@@ -316,7 +316,7 @@ elif page_selection == "Fraud Detection Simulator":
         ]
         
         # Prepare input data
-        input_data = np.array([[time, amount] + v_features], dtype=np.float32)
+        input_data = np.array([[time] + v_features + [amount]], dtype=np.float32)
 
         # Standardize the input data using the loaded scaler
         standardized_data = scaler.transform(input_data)
