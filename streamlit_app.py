@@ -167,66 +167,50 @@ elif page_selection == "Model Training and Evaluation":
         ]
     )
 
-    if graph_selection == "Loss Curve":
-        st.write("### Loss Curve")
-        fig = load_graph("loss_curve.pkl")
-        if fig:
-            st.pyplot(fig)
-
-    elif graph_selection == "Cutoff Analysis":
+    if graph_selection == "Cutoff Analysis":
         st.write("### Cutoff Analysis")
 
-        # Load cutoff analysis graph
-        fig = load_graph("cutoff.pkl")
-        if fig:
+        # Load cutoff data
+        try:
+            with open("cutoff_data.pkl", "rb") as f:
+                cutoff_data = pickle.load(f)
+        except FileNotFoundError:
+            st.error("Cutoff data file not found.")
+            cutoff_data = None
+
+        if cutoff_data:
+            thresholds = cutoff_data["thresholds"]
+            precisions = cutoff_data["precisions"]
+            recalls = cutoff_data["recalls"]
+
+            # Interactive slider for cutoff threshold
+            cutoff_threshold = st.slider(
+                "Select the cutoff threshold:",
+                min_value=float(thresholds[0]),
+                max_value=float(thresholds[-1]),
+                value=0.5,
+                step=0.01,
+            )
+
+            # Find the closest threshold index
+            closest_idx = (np.abs(thresholds - cutoff_threshold)).argmin()
+
+            # Display precision and recall for the selected cutoff
+            st.write(f"**Precision Score:** {precisions[closest_idx]:.2f}")
+            st.write(f"**Recall Score:** {recalls[closest_idx]:.2f}")
+
+            # Plot precision and recall vs. threshold
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.plot(thresholds, recalls, label="Recall", color="green")
+            ax.plot(thresholds, precisions, label="Precision", color="blue")
+            ax.axvline(cutoff_threshold, color="red", linestyle="--", label=f"Selected Threshold ({cutoff_threshold:.2f})")
+            ax.set_title("Precision and Recall vs Threshold", fontsize=16)
+            ax.set_xlabel("Threshold", fontsize=12)
+            ax.set_ylabel("Score", fontsize=12)
+            ax.legend()
+            ax.grid()
             st.pyplot(fig)
 
-        # Add a slider to adjust the cutoff threshold
-        cutoff_threshold = st.slider(
-            "Select the cutoff threshold:", min_value=0.0, max_value=1.0, value=0.5, step=0.01
-        )
-
-        # Calculate and display precision and recall dynamically
-        try:
-            # Assuming you have access to the predicted probabilities and true labels
-            y_pred_probs = ...  # Replace with your model's predicted probabilities
-            y_true = ...  # Replace with your true labels
-
-            y_pred = (y_pred_probs > cutoff_threshold).astype(int)
-            precision = precision_score(y_true, y_pred)
-            recall = recall_score(y_true, y_pred)
-
-            st.write(f"**Precision Score:** {precision:.2f}")
-            st.write(f"**Recall Score:** {recall:.2f}")
-        except Exception as e:
-            st.warning("Could not calculate precision and recall. Ensure y_pred_probs and y_true are available.")
-
-    elif graph_selection == "Classification Reports & Confusion Matrices":
-        st.write("### Classification Reports & Confusion Matrices")
-
-        # Load and display Classification Report for Training
-        st.write("#### Training Classification Report")
-        train_report_fig = load_graph("classification_report_train.pkl")
-        if train_report_fig:
-            st.pyplot(train_report_fig)
-
-        # Load and display Confusion Matrix for Training
-        st.write("#### Training Confusion Matrix")
-        train_cm_fig = load_graph("confusion_matrix_train.pkl")
-        if train_cm_fig:
-            st.pyplot(train_cm_fig)
-
-        # Load and display Classification Report for Testing
-        st.write("#### Testing Classification Report")
-        test_report_fig = load_graph("classification_report_test.pkl")
-        if test_report_fig:
-            st.pyplot(test_report_fig)
-
-        # Load and display Confusion Matrix for Testing
-        st.write("#### Testing Confusion Matrix")
-        test_cm_fig = load_graph("confusion_matrix_test.pkl")
-        if test_cm_fig:
-            st.pyplot(test_cm_fig)
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
