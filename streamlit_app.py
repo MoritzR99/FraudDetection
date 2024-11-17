@@ -362,10 +362,7 @@ elif page_selection == "Fraud Detection Simulator":
             # Load the model
             fraud_detection_model = load_model("model.h5")
                         
-            # Fraud Detection Simulator Page
-            st.subheader("Fraud Detection Simulator")
-            st.write("Upload a CSV file with transaction data for fraud detection.")
-        
+            # Fraud Detection Simulator Page        
             uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
             
             if uploaded_file is not None:
