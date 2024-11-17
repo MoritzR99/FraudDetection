@@ -376,17 +376,17 @@ elif page_selection == "Fraud Detection Simulator":
                     # Display the uploaded data
                     st.write("### Uploaded Data Preview")
                     st.dataframe(input_data.head())
-                    
-                    # Preprocess the input data
-                    processed_data = preprocess_input(input_data)
+
+                    # Standardize the input data using the loaded scaler
+                    standardized_data = scaler.transform(input_data)
                     
                     # Ensure the input matches the model's expected dimensions
-                    if processed_data.shape[1] != 30:  # Assuming 'Time', 'Amount', and 'V1' to 'V28'
+                    if standardized_data.shape[1] != 30:  # Assuming 'Time', 'Amount', and 'V1' to 'V28'
                         st.error("Uploaded CSV does not have the correct structure. Ensure it matches the required format.")
                     else:
                         # Predict fraud
                         st.write("### Predicting Fraud...")
-                        predictions = predict_fraud(processed_data)
+                        predictions = predict_fraud(standardized_data)
                         
                         # Add predictions to the dataframe
                         input_data['Fraud Prediction'] = (predictions > 0.5).astype(int)  # Binary classification
