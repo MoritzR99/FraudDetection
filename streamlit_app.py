@@ -27,7 +27,7 @@ st.set_page_config(
 # Title and Sidebar Menu
 st.title('Credit Card Fraud Detection')
 st.sidebar.header("Menu")
-page_selection = st.sidebar.radio("Go to", [
+page_selection = st.sidebar.radio("", [
     "Introduction",
     "Data Overview",
     "Exploratory Data Analysis",
