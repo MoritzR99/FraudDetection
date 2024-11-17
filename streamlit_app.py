@@ -253,7 +253,7 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Training Set Classification Report")
         try:
             # Load and display the training classification report
-            with open("/mnt/data/classification_report_train.pkl", "rb") as file:
+            with open("classification_report_train.pkl", "rb") as file:
                 train_report = pickle.load(file)
             st.text(train_report)
         except FileNotFoundError:
@@ -266,7 +266,7 @@ elif page_selection == "Model Training and Evaluation":
         st.write("#### Test Set Classification Report")
         try:
             # Load and display the test classification report
-            with open("/mnt/data/classification_report_test.pkl", "rb") as file:
+            with open("classification_report_test.pkl", "rb") as file:
                 test_report = pickle.load(file)
             st.text(test_report)
         except FileNotFoundError:
