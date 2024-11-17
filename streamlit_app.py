@@ -41,8 +41,16 @@ page_selection = st.radio("", [
 if page_selection == "Introduction":
     st.balloons()  # Display balloons
     st.subheader("Welcome to the Credit Card Fraud Detection App")
-    st.write("The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, providing real-time predictions based on transaction data.")
+    st.write(
+        "The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. "
+        "It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, "
+        "providing real-time predictions based on transaction data."
+    )
 
+    # Display a credit card GIF
+    gif_url = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDhyZjY3d3A1OWVtOGk2cHl4YmF0MThhY3MyYzZ6cmQ2cDl3MGdvZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PqSxWQglz4dBtJgzdE/giphy.gif"
+    st.image(gif_url, caption="Credit Card Fraud Detection in Action", use_column_width=True)
+    
 # Page selection for "Data Overview"
 elif page_selection == "Data Overview":
     st.balloons()  # Display balloons
