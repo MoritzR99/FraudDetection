@@ -319,16 +319,15 @@ elif page_selection == "Fraud Detection Simulator":
         input_data = np.array([[time, amount] + v_features], dtype=np.float32)
 
         # Standardize the input data using the loaded scaler
-        if st.button("Process Input"):
-            standardized_data = scaler.transform(input_data)
-            st.write("Standardized Input Data:")
-            st.write(standardized_data)
+        standardized_data = scaler.transform(input_data)
+        st.write("Standardized Input Data:")
+        st.write(standardized_data)
         
         # Predict fraud
         if st.button("Detect Fraud"):
             try:
                 # Make predictions
-                prediction = fraud_detection_model.predict(input_data)
+                prediction = fraud_detection_model.predict(standardized_data)
                 fraud_probability = prediction[0][0]  # Assuming binary classification with a single output neuron
         
                 # Display prediction results
