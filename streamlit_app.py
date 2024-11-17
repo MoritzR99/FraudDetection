@@ -265,59 +265,85 @@ elif page_selection == "Model Training and Evaluation":
 
 elif page_selection == "Fraud Detection Simulator":
     st.subheader("Fraud Detection Simulator")
+    # Dropdown to select input mode
+st.sidebar.title("Fraud Detection Simulator")
+input_mode = st.sidebar.selectbox("Select Input Mode", ["Manual Input", "Upload CSV"])
+
+if input_mode == "Manual Input":
+    st.subheader("Fraud Detection Simulator - Manual Input")
     st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
 
     # Load the model
     try:
-        fraud_detection_model = load_model("model.h5")
+        fraud_detection_model = pickle.load(open("model.pkl", "rb"))
     except FileNotFoundError:
-        st.error("Model file not found. Please ensure 'model.h5' is in the same directory.")
+        st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
         st.stop()
+
     # Sidebar for feature input
-st.sidebar.header("Input Transaction Details")
-st.sidebar.write("Use the sliders to input transaction details.")
+    st.sidebar.header("Input Transaction Details")
+    st.sidebar.write("Use the sliders to input transaction details.")
 
-# Input sliders for transaction details
-time = st.sidebar.slider("Transaction Time (seconds since first transaction)", min_value=0, max_value=100000, value=0, step=100)
-amount = st.sidebar.slider("Transaction Amount", min_value=0.0, max_value=10000.0, value=0.0, step=0.01)
+    # Input sliders for transaction details
+    time = st.sidebar.slider("Transaction Time (seconds since first transaction)", min_value=0, max_value=100000, value=0, step=100)
+    amount = st.sidebar.slider("Transaction Amount", min_value=0.0, max_value=10000.0, value=0.0, step=0.01)
 
-# Input sliders for PCA-transformed V features
-st.sidebar.write("PCA-Transformed Features (V1 to V28)")
-v_features = [
-    st.sidebar.slider(f"V{i}", min_value=-50.0, max_value=50.0, value=0.0, step=0.1) for i in range(1, 29)
-]
+    # Input sliders for PCA-transformed V features
+    st.sidebar.write("PCA-Transformed Features (V1 to V28)")
+    v_features = [
+        st.sidebar.slider(f"V{i}", min_value=-50.0, max_value=50.0, value=0.0, step=0.1) for i in range(1, 29)
+    ]
 
-# Prepare input data
-input_data = np.array([[time, amount] + v_features], dtype=np.float32)
+    # Prepare input data
+    input_data = np.array([[time, amount] + v_features], dtype=np.float32)
 
-# Predict fraud
-if st.button("Detect Fraud"):
-    try:
-        prediction = fraud_detection_model.predict(input_data)
-        fraud_probability = prediction[0][0]  # Assuming binary classification with a single output neuron
+    # Predict fraud
+    if st.button("Detect Fraud"):
+        try:
+            prediction = fraud_detection_model.predict(input_data)
+            fraud_probability = fraud_detection_model.predict_proba(input_data)[0][1]
 
-        if fraud_probability > 0.5:  # Threshold for fraud
-            st.error(f"🚨 The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
-        else:
-            st.success(f"✅ The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
-        
-        # Display input summary as a table
-        st.write("### Input Summary")
-        summary = pd.DataFrame({
-            "Feature": ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)],
-            "Value": [time, amount] + v_features
-        })
-        st.table(summary)
+            if fraud_probability > 0.5:  # Threshold for fraud
+                st.error(f"🚨 The transaction is predicted to be FRAUDULENT with a probability of {fraud_probability:.2f}.")
+            else:
+                st.success(f"✅ The transaction is predicted to be LEGITIMATE with a probability of {1 - fraud_probability:.2f}.")
+            
+            # Display input summary as a table
+            st.write("### Input Summary")
+            summary = pd.DataFrame({
+                "Feature": ["Time", "Amount"] + [f"V{i}" for i in range(1, 29)],
+                "Value": [time, amount] + v_features
+            })
+            st.table(summary)
 
-        # Download button for the summary
-        csv = summary.to_csv(index=False)
-        st.download_button("Download Input Summary as CSV", csv, file_name="input_summary.csv")
-    except Exception as e:
-        st.error(f"An error occurred during prediction: {str(e)}")
+            # Download button for the summary
+            csv = summary.to_csv(index=False)
+            st.download_button("Download Input Summary as CSV", csv, file_name="input_summary.csv")
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {str(e)}")
 
-# Footer with instructions
-st.write("---")
-st.write("Adjust the features in the sidebar and click 'Detect Fraud' to see the results.")
-st.write("Feel free to share the public link with others!")
+    # Footer with instructions
+    st.write("---")
+    st.write("Adjust the features in the sidebar and click 'Detect Fraud' to see the results.")
+    st.write("Feel free to share the public link with others!")
 
+elif input_mode == "Upload CSV":
+    st.subheader("Fraud Detection Simulator - Upload CSV")
+    st.write("Upload a CSV file containing transaction details to predict fraud for multiple transactions.")
+    
+    # File upload
+    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
+    if uploaded_file:
+        try:
+            # Placeholder for CSV processing logic
+            st.write("CSV functionality coming soon...")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+    else:
+        st.info("Please upload a CSV file to get started.")
+Key Features:
+Manual Input:
+
+Allows users to manually input transaction details using sliders.
+Generates predictions for the manually input d
