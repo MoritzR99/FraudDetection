@@ -49,7 +49,7 @@ if page_selection == "Introduction":
 
     # Display a credit card GIF
     gif_url = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDhyZjY3d3A1OWVtOGk2cHl4YmF0MThhY3MyYzZ6cmQ2cDl3MGdvZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PqSxWQglz4dBtJgzdE/giphy.gif"
-    st.image(gif_url, caption="Credit Card Fraud Detection in Action", use_column_width=True)
+    st.image(gif_url, caption="Credit Card Fraud Detection in Action", width=300)
     
 # Page selection for "Data Overview"
 elif page_selection == "Data Overview":
