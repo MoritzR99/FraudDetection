@@ -18,6 +18,11 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 
+
+# Load the saved scaler
+with open('scaler.pkl', 'rb') as f:
+scaler = pickle.load(f)
+
 # Load the cutoff_data.pkl at the start of the app
 try:
     with open("cutoff_data.pkl", "rb") as file:
@@ -312,10 +317,6 @@ elif page_selection == "Fraud Detection Simulator":
         
         # Prepare input data
         input_data = np.array([[time, amount] + v_features], dtype=np.float32)
-
-        # Load the saved scaler
-        with open('scaler.pkl', 'rb') as f:
-        scaler = pickle.load(f)
 
         # Standardize the input data using the loaded scaler
         if st.button("Process Input"):
