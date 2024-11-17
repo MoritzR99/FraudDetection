@@ -24,11 +24,6 @@ st.set_page_config(
     initial_sidebar_state='auto'
 )
 
-# Title and Top Navigation Menu
-st.title("Credit Card Fraud Detection")
-
-import streamlit as st
-
 # Title
 st.title("Credit Card Fraud Detection")
 
