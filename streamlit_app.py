@@ -242,6 +242,9 @@ elif page_selection == "Model Training and Evaluation":
     with col2:
         st.write("#### Test Set Confusion Matrix")
         load_numpy("confusion_matrix_test.pkl")
+
+    elif evaluation_selection == "Classification Reports":
+        st.write("#### Classification Reports")
     
 
 
