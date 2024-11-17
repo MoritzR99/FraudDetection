@@ -151,66 +151,94 @@ elif page_selection == "Feature Engineering":
     st.subheader("Feature Engineering")
     st.write("No additional features were added, as most of them are already PCA transformed. The only transformation used, was the Standart Scaler to normalize features for the ANN model.")
 
-# Model Training and Evaluation Section
 elif page_selection == "Model Training and Evaluation":
-    st.balloons()
+    st.balloons()  # Display balloons
     st.subheader("Model Training and Evaluation")
-    st.write("Model performance metrics...")
+    st.write("Explore model performance metrics using the dropdown menu below:")
 
-    # Dropdown for graph selection
-    graph_selection = st.selectbox(
-        "Choose a visualization or metrics to display:",
+    # Dropdown menu to select the graph/report to display
+    evaluation_selection = st.selectbox(
+        "Choose a visualization or report:",
         [
             "Loss Curve",
             "Cutoff Analysis",
-            "Classification Reports & Confusion Matrices",
+            "Classification Reports and Confusion Matrices",
         ]
     )
 
-    if graph_selection == "Cutoff Analysis":
-        st.write("### Cutoff Analysis")
-
-        # Load cutoff data
+    def load_graph(file_name):
+        """Helper function to load and display graphs from .pkl files."""
         try:
-            with open("cutoff_data.pkl", "rb") as f:
-                cutoff_data = pickle.load(f)
-        except FileNotFoundError:
-            st.error("Cutoff data file not found.")
-            cutoff_data = None
+            with open(file_name, "rb") as file:
+                fig = pickle.load(file)
+            st.pyplot(fig)
+        except FileNotFoundError as e:
+            st.error(f"Graph not found: {file_name}")
+        except Exception as e:
+            st.error(f"An error occurred while loading {file_name}: {e}")
 
-        if cutoff_data:
-            thresholds = cutoff_data["thresholds"]
-            precisions = cutoff_data["precisions"]
-            recalls = cutoff_data["recalls"]
+    if evaluation_selection == "Loss Curve":
+        st.write("### Loss Curve")
+        load_graph("loss_curve.pkl")
 
-            # Interactive slider for cutoff threshold
-            cutoff_threshold = st.slider(
-                "Select the cutoff threshold:",
-                min_value=float(thresholds[0]),
-                max_value=float(thresholds[-1]),
+    elif evaluation_selection == "Cutoff Analysis":
+        st.write("### Cutoff Analysis")
+        # Load cutoff data to create an adjustable graph
+        try:
+            with open("cutoff_data.pkl", "rb") as file:
+                cutoff_data = pickle.load(file)
+
+            # Adjustable cutoff slider
+            cutoff_value = st.slider(
+                "Adjust Cutoff Value",
+                min_value=0.0,
+                max_value=1.0,
                 value=0.5,
                 step=0.01,
             )
 
-            # Find the closest threshold index
-            closest_idx = (np.abs(thresholds - cutoff_threshold)).argmin()
+            # Filter data for the current cutoff value
+            cutoff_filtered = cutoff_data[cutoff_data["cutoff"] == cutoff_value]
+            if not cutoff_filtered.empty:
+                precision = cutoff_filtered["precision"].values[0]
+                recall = cutoff_filtered["recall"].values[0]
+                st.write(f"**Precision**: {precision:.2f}")
+                st.write(f"**Recall**: {recall:.2f}")
 
-            # Display precision and recall for the selected cutoff
-            st.write(f"**Precision Score:** {precisions[closest_idx]:.2f}")
-            st.write(f"**Recall Score:** {recalls[closest_idx]:.2f}")
+            # Load the cutoff graph
+            load_graph("cutoff.pkl")
 
-            # Plot precision and recall vs. threshold
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(thresholds, recalls, label="Recall", color="green")
-            ax.plot(thresholds, precisions, label="Precision", color="blue")
-            ax.axvline(cutoff_threshold, color="red", linestyle="--", label=f"Selected Threshold ({cutoff_threshold:.2f})")
-            ax.set_title("Precision and Recall vs Threshold", fontsize=16)
-            ax.set_xlabel("Threshold", fontsize=12)
-            ax.set_ylabel("Score", fontsize=12)
-            ax.legend()
-            ax.grid()
-            st.pyplot(fig)
+        except FileNotFoundError:
+            st.error("Cutoff data not found.")
+        except Exception as e:
+            st.error(f"An error occurred while loading cutoff data: {e}")
 
+    elif evaluation_selection == "Classification Reports and Confusion Matrices":
+        st.write("### Classification Reports")
+        try:
+            # Load classification reports
+            with open("classification_report_train.pkl", "rb") as file:
+                classification_report_train = pickle.load(file)
+            with open("classification_report_test.pkl", "rb") as file:
+                classification_report_test = pickle.load(file)
+
+            st.write("#### Training Set")
+            st.dataframe(pd.DataFrame(classification_report_train).T)
+
+            st.write("#### Test Set")
+            st.dataframe(pd.DataFrame(classification_report_test).T)
+
+            # Load confusion matrix graphs
+            st.write("### Confusion Matrices")
+            st.write("#### Training Set")
+            load_graph("confusion_matrix_train.pkl")
+            st.write("#### Test Set")
+            load_graph("confusion_matrix_test.pkl")
+
+        except FileNotFoundError as e:
+            st.error(f"File not found: {e}")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
 
 elif page_selection == "Fraud Detection Simulator":
     st.balloons()  # Display balloons
