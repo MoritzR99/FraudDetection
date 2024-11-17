@@ -272,8 +272,6 @@ elif page_selection == "Fraud Detection Simulator":
     if input_mode == "Manual Input":
         st.subheader("Fraud Detection Simulator - Manual Input")
         st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
-    
-        st.write("Interactive fraud detection form to predict transaction fraud. Play around with the features to explore the model!")
         
         # Load the model
         with open("model.pkl", "rb") as f:
