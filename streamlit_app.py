@@ -101,7 +101,7 @@ if page_selection == "Introduction":
     st.write(
         "The app leverages a trained ANN model to predict the likelihood of fraud in credit card transactions. "
         "It simplifies the analysis process for financial institutions and users concerned with fraudulent activity, "
-        "providing real-time predictions based on transaction data."
+        "providing predictions based on single transaction data or whole datasets."
     )
 
     # Display a credit card GIF
